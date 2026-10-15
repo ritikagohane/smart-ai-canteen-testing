@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Smart Canteen — Voice Ordering System</title>
+  <meta name="description" content="AI Smart Canteen with voice ordering feature for students powered by Speech-to-Text.">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/voice.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥪</text></svg>">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand-wrap">
+        <div class="brand-logo-icon">🥪</div>
+        <div class="brand-text">
+          <h1>SmartBite AI</h1>
+          <span class="brand-badge">Smart Canteen</span>
+        </div>
+      </a>
+
+      <!-- Quick Action Buttons -->
+      <div class="nav-actions">
+        <!-- Microphone Button in Header -->
+        <button id="nav-mic-btn" class="btn-nav-mic" aria-label="Start Voice Order">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+          <span>Voice Order</span>
+          <span class="mic-pulse-indicator"></span>
+        </button>
+
+        <!-- Student Account / Details -->
+        <button id="nav-student-pill" class="btn-nav-student" aria-label="Student Details" title="Enter Name, Roll No & Department">
+          <span class="nav-student-avatar">👤</span>
+          <div class="nav-student-text">
+            <span class="nav-student-name">Student</span>
+            <span class="nav-student-id">Enter Details</span>
+          </div>
+          <span class="nav-student-dropdown-icon">▾</span>
+        </button>
+
+        <!-- Cart / Tray Button -->
+        <button id="nav-cart-btn" class="btn-nav-cart" aria-label="View Order Tray">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>Tray</span>
+          <span id="nav-cart-count" class="cart-counter-bubble hidden">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section with Voice Trigger & Sample Spoken Phrases -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span>⚡ Campus Express Ordering</span>
+        <span>•</span>
+        <span>🎙️ AI Voice Ordering (Key Feature) & Typing</span>
+      </div>
+      <h2 class="hero-title">Order Canteen Food at the <span>Speed of Voice</span></h2>
+      <p class="hero-subtitle">
+        Speak your cravings naturally with your microphone (or type your order). Skip the long cafeteria queue and pick up with your token!
+      </p>
+
+      <!-- Interactive Voice & Type Smart Order Bar (Voice is Key Feature) -->
+      <form id="hero-smart-order-form" class="hero-smart-bar">
+        <div class="hero-bar-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+        </div>
+        <input 
+          type="text" 
+          id="hero-order-input" 
+          class="hero-bar-input" 
+          placeholder="Speak with mic 🎙️ (or type, e.g. 'Order one veg sandwich and a cold coffee')..." 
+          autocomplete="off"
+        />
+        <div class="hero-bar-buttons">
+          <button type="button" id="hero-bar-mic-btn" class="hero-bar-btn hero-bar-mic primary-voice-btn" title="Speak with Microphone (Key Feature)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+              <line x1="12" y1="19" x2="12" y2="23"></line>
+              <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+            <span>🎙️ Speak Order</span>
+            <span class="mic-live-dot"></span>
+          </button>
+          <button type="submit" id="hero-bar-submit-btn" class="hero-bar-btn hero-bar-submit" title="Detect & Order (Keyboard)">
+            <span>Type & Order</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </form>
+
+      <!-- Quick Clickable Chips to Test the Exact Phrases -->
+      <div class="hero-prompt-suggestions">
+        <span>Quick Test:</span>
+        <button class="hero-prompt-chip" data-phrase="Order one veg sandwich and a cold coffee">
+          🗣️ "Order one veg sandwich and a cold coffee"
+        </button>
+        <button class="hero-prompt-chip" data-phrase="One crispy masala dosa and a mango lassi">
+          🗣️ "One crispy masala dosa and a mango lassi"
+        </button>
+        <button class="hero-prompt-chip" data-phrase="Two chole bhature and one cold coffee">
+          🗣️ "Two chole bhature and one cold coffee"
+        </button>
+        <button class="hero-prompt-chip" data-phrase="One margherita pizza and one oreo milkshake">
+          🗣️ "One margherita pizza and one oreo milkshake"
+        </button>
+        <button class="hero-prompt-chip" data-phrase="Two samosas and two masala chai">
+          🗣️ "Two samosas and two masala chai"
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Menu View Container -->
+  <main class="main-content">
+    <div id="menu-container">
+      <!-- Menu category pills and food cards will be rendered here by MenuView -->
+    </div>
+  </main>
+
+  <!-- Floating Action Microphone Button (Always accessible on screen) -->
+  <button id="floating-mic-btn" class="floating-mic-btn" aria-label="Open Voice Ordering Assistant" title="Voice Order Food">
+    <span class="floating-mic-badge">AI MIC</span>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+      <line x1="12" y1="19" x2="12" y2="23"></line>
+      <line x1="8" y1="23" x2="16" y2="23"></line>
+    </svg>
+  </button>
+
+  <!-- Footer with Modular Architecture Status -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-info">
+        <p><strong>AI Smart Canteen System</strong> • Student Cafeteria Frontend Demo</p>
+        <p>Zero backend or payment gateway dependencies • Pure frontend client implementation.</p>
+      </div>
+
+      <!-- Modular Architecture Indicator -->
+      <div class="provider-architecture-box">
+        <span style="font-size: 0.8rem; font-weight: 600; color: #475569;">Active Voice Engine:</span>
+        <span id="current-provider-name" class="provider-pill web-speech">Web Speech API (Active)</span>
+        <button id="provider-switch-btn" class="btn-switch-provider" title="Test modular architecture">
+          Switch to Parakit Stub
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript Application Module -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

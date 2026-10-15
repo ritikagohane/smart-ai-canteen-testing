@@ -1,0 +1,590 @@
+/* ==========================================================================
+   Voice Ordering Modal & Listening Animation Styles
+   ========================================================================== */
+
+.voice-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  animation: modal-fade-in 0.25s ease-out;
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.voice-modal-card {
+  background: #ffffff;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 2rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  animation: modal-pop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modal-pop {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.voice-modal-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: #f1f5f9;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.voice-modal-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* Header */
+.voice-modal-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.voice-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  margin-bottom: 0.75rem;
+  border: 1px solid #a7f3d0;
+}
+
+.voice-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.voice-modal-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
+}
+
+.voice-modal-subtitle {
+  font-size: 0.88rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+/* Mode Switcher Tabs (Speak vs Type) */
+.order-mode-tabs {
+  display: flex;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+  gap: 4px;
+}
+
+.order-mode-tab {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  padding: 0.55rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.order-mode-tab:hover {
+  color: #0f172a;
+}
+
+.order-mode-tab.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Typing Mode Input Section */
+.type-input-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  animation: modal-fade-in 0.2s ease-out;
+}
+
+.type-input-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 0.5rem;
+}
+
+.type-input-control-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.modal-type-field {
+  flex: 1;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0.7rem 0.85rem;
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: #0f172a;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.modal-type-field:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.btn-type-detect {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.7rem 1.15rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.type-input-hint {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.type-input-hint strong {
+  color: #0f172a;
+}
+
+/* --------------------------------------------------------------------------
+   Central Microphone & Listening Animations
+   -------------------------------------------------------------------------- */
+.voice-interactive-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  min-height: 160px;
+}
+
+.voice-mic-outer-wrap {
+  position: relative;
+  width: 104px;
+  height: 104px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.voice-mic-main-btn {
+  position: relative;
+  z-index: 5;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.voice-mic-main-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.55);
+}
+
+.voice-mic-main-btn.active-listening {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+  animation: mic-shake 2.5s infinite;
+}
+
+@keyframes mic-shake {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Pulse Rings */
+.pulse-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.2);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.voice-mic-main-btn.active-listening ~ .pulse-ring,
+.pulse-ring.active {
+  background: rgba(239, 68, 68, 0.2);
+  animation: pulse-wave 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+.pulse-ring.ring-1 {
+  animation-delay: 0s;
+}
+
+.pulse-ring.ring-2 {
+  animation-delay: 0.5s;
+}
+
+.pulse-ring.ring-3 {
+  animation-delay: 1s;
+}
+
+@keyframes pulse-wave {
+  0% {
+    width: 76px;
+    height: 76px;
+    opacity: 0.8;
+  }
+  100% {
+    width: 160px;
+    height: 160px;
+    opacity: 0;
+  }
+}
+
+/* Equalizer Bars */
+.voice-equalizer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  margin-bottom: 0.75rem;
+}
+
+.voice-equalizer .bar {
+  display: inline-block;
+  width: 4px;
+  background: #10b981;
+  border-radius: 4px;
+  animation: soundbars 1.2s ease-in-out infinite alternate;
+}
+
+.voice-equalizer .bar:nth-child(1) { height: 8px; animation-delay: 0.1s; }
+.voice-equalizer .bar:nth-child(2) { height: 16px; animation-delay: 0.3s; }
+.voice-equalizer .bar:nth-child(3) { height: 22px; animation-delay: 0.15s; }
+.voice-equalizer .bar:nth-child(4) { height: 12px; animation-delay: 0.4s; }
+.voice-equalizer .bar:nth-child(5) { height: 20px; animation-delay: 0.25s; }
+.voice-equalizer .bar:nth-child(6) { height: 14px; animation-delay: 0.35s; }
+.voice-equalizer .bar:nth-child(7) { height: 9px; animation-delay: 0.05s; }
+
+@keyframes soundbars {
+  0% { transform: scaleY(0.3); }
+  100% { transform: scaleY(1.3); }
+}
+
+.voice-status-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #475569;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Speech Transcript Box
+   -------------------------------------------------------------------------- */
+.voice-transcript-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.transcript-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+.voice-transcript-content {
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: #0f172a;
+  min-height: 38px;
+  word-break: break-word;
+}
+
+.voice-transcript-content.empty {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.voice-transcript-content.interim {
+  color: #64748b;
+  font-style: italic;
+}
+
+.voice-transcript-content.final {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Recognized Order Preview Card
+   -------------------------------------------------------------------------- */
+.voice-order-preview {
+  background: #fcfdfd;
+  border: 1.5px solid #a7f3d0;
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  animation: slide-up 0.2s ease-out;
+}
+
+@keyframes slide-up {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #ecfdf5;
+}
+
+.preview-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #065f46;
+}
+
+.preview-badge {
+  background: #ecfdf5;
+  color: #059669;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+}
+
+.preview-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+}
+
+.preview-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.preview-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.preview-item-emoji {
+  font-size: 1.35rem;
+}
+
+.preview-item-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.preview-item-meta {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.preview-item-right {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.preview-item-qty {
+  font-size: 0.82rem;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: #334155;
+}
+
+.preview-item-subtotal {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  min-width: 45px;
+  text-align: right;
+}
+
+.preview-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px dashed #cbd5e1;
+  padding-top: 0.65rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.preview-total-price {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #059669;
+}
+
+/* --------------------------------------------------------------------------
+   Error Banner
+   -------------------------------------------------------------------------- */
+.voice-error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.error-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.error-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #991b1b;
+  margin-bottom: 0.15rem;
+}
+
+.error-message {
+  font-size: 0.8rem;
+  color: #b91c1c;
+  line-height: 1.35;
+}
+
+/* --------------------------------------------------------------------------
+   Action Buttons (Confirm & Cancel)
+   -------------------------------------------------------------------------- */
+.voice-modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.voice-action-btn {
+  padding: 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   Demo Hints & Prompt Chips
+   -------------------------------------------------------------------------- */
+.voice-demo-hints {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  border: 1px dashed #cbd5e1;
+}
+
+.demo-hints-title {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.demo-chips-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.demo-chip {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 0.78rem;
+  text-align: left;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.demo-chip:hover {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #047857;
+  transform: translateX(2px);
+}
